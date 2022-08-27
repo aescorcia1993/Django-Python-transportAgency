@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.db import models
 
 # Create your models here.
@@ -51,8 +52,8 @@ class Driver(models.Model):
 class Trip(models.Model):
     routeName = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
-    #arriveTime = models.DateTimeField(default={})
-    #departureTime = models.DateTimeField(default={})
+    arriveTime = models.DateTimeField(null=True, blank=True)
+    departureTime = models.DateTimeField(null=True, blank=True)
     status = models.CharField(max_length=1, default="A")
 
 class Seats(models.Model):

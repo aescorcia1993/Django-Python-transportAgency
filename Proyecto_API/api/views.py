@@ -2,7 +2,7 @@ from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .models import Bus, Driver, Passenger
+from .models import Bus, Driver, Passenger, Trip
 import json
 
 # Create your views here.
@@ -255,4 +255,71 @@ class BusView(View):
             datos = {'message': "Success"}
         else:
             datos = {'message': "Bus not found..."}
+        return JsonResponse(datos)
+
+class TripView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, id=0):
+        if (id > 0):
+            trips = list(Trip.objects.filter(id=id).values())
+            if len(trips) > 0:
+                trip = trips[0]
+                datos = {'message': "Success", 'trip': trip}
+            else:
+                datos = {'message': "trips not found..."}
+            return JsonResponse(datos)
+        else:
+            trips = list(Trip.objects.values())
+            if len(trips) > 0:
+                datos = {'message': "Success", 'trips': trips}
+            else:
+                datos = {'message': "trips not found..."}
+            return JsonResponse(datos)
+
+    def post(self, request):
+        # print(request.body)
+        jd = json.loads(request.body)
+        # print(jd)
+        try:
+            Trip.objects.create(routeName=jd['routeName'],
+            description=jd['description'],
+            arriveTime=jd['arriveTime'],
+            departureTime=jd['departureTime'],
+            status=jd['status'])
+
+            datos = {'message': "Success"}
+        except:
+            datos = {'message': "Error saving trip"}
+
+        return JsonResponse(datos)
+    
+    def put(self, request, id):
+        jd = json.loads(request.body)
+        trips = list(Trip.objects.filter(id=id).values())
+        if len(trips) > 0:
+            trip = Trip.objects.get(id=id)
+
+            trip.routeName=jd['routeName']
+            trip.description=jd['description']
+            trip.arriveTime=jd['arriveTime']
+            trip.departureTime=jd['departureTime']
+            trip.status = jd['status']
+
+            trip.save()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Trip not found..."}
+        return JsonResponse(datos)
+    
+    def delete(self, request, id):
+        trips = list(Trip.objects.filter(id=id).values())
+        if len(trips) > 0:
+            Trip.objects.filter(id=id).delete()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Trip not found..."}
         return JsonResponse(datos)
