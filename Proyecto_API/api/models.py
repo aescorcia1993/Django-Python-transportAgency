@@ -46,7 +46,7 @@ class Driver(models.Model):
     country = models.CharField(max_length=10)
     state = models.CharField(max_length=10)
     email = models.EmailField()
-    #status = models.BooleanField()
+    status = models.CharField(max_length=10, default="A")
 
 class Trip(models.Model):
     routeName = models.CharField(max_length=50)
