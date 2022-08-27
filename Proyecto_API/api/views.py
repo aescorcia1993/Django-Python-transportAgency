@@ -52,3 +52,36 @@ class PassengerView(View):
             datos = {'message': "Error saving passenger"}
 
         return JsonResponse(datos)
+    
+    def put(self, request, id):
+        jd = json.loads(request.body)
+        passengers = list(Passenger.objects.filter(id=id).values())
+        if len(passengers) > 0:
+            passenger = Passenger.objects.get(id=id)
+            
+            passenger.name = jd['name']
+            passenger.lastName = jd['lastName']
+            passenger.dni = jd['dni']
+            passenger.address = jd['address']
+            passenger.phone1 = jd['phone1']
+            passenger.gener = jd['gener']
+            passenger.country = jd['country']
+            passenger.state = jd['state']
+            passenger.email = jd['email']
+            passenger.dob = jd['dob']
+            passenger.status = jd['status']
+
+            passenger.save()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Passenger not found..."}
+        return JsonResponse(datos)
+    
+    def delete(self, request, id):
+        passengers = list(Passenger.objects.filter(id=id).values())
+        if len(passengers) > 0:
+            Passenger.objects.filter(id=id).delete()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Passenger not found..."}
+        return JsonResponse(datos)
