@@ -17,8 +17,8 @@ class PassengerView(View):
         if (id > 0):
             passengers = list(Passenger.objects.filter(id=id).values())
             if len(passengers) > 0:
-                company = passengers[0]
-                datos = {'message': "Success", 'company': company}
+                passenger = passengers[0]
+                datos = {'message': "Success", 'company': passenger}
             else:
                 datos = {'message': "passengers not found..."}
             return JsonResponse(datos)
@@ -30,3 +30,25 @@ class PassengerView(View):
                 datos = {'message': "passengers not found..."}
             return JsonResponse(datos)
 
+    def post(self, request):
+        # print(request.body)
+        jd = json.loads(request.body)
+        # print(jd)
+        try:
+            Passenger.objects.create(name=jd['name'],
+            lastName=jd['lastName'],
+            dni=jd['dni'],
+            address=jd['address'],
+            phone1=jd['phone1'],
+            gener=jd['gener'],
+            country=jd['country'],
+            state=jd['state'],
+            email=jd['email'],
+            dob=jd['dob'],
+            status=jd['status'])
+
+            datos = {'message': "Success"}
+        except:
+            datos = {'message': "Error saving passenger"}
+
+        return JsonResponse(datos)
