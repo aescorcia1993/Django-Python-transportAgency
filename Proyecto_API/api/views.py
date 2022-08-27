@@ -186,3 +186,73 @@ class DriverView(View):
         else:
             datos = {'message': "Driver not found..."}
         return JsonResponse(datos)
+
+class BusView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, id=0):
+        if (id > 0):
+            buses = list(Bus.objects.filter(id=id).values())
+            if len(buses) > 0:
+                bus = buses[0]
+                datos = {'message': "Success", 'company': bus}
+            else:
+                datos = {'message': "buses not found..."}
+            return JsonResponse(datos)
+        else:
+            buses = list(Bus.objects.values())
+            if len(buses) > 0:
+                datos = {'message': "Success", 'buses': buses}
+            else:
+                datos = {'message': "buses not found..."}
+            return JsonResponse(datos)
+
+    def post(self, request):
+        # print(request.body)
+        jd = json.loads(request.body)
+        # print(jd)
+        try:
+            Bus.objects.create(placa=jd['placa'],
+            modelo=jd['modelo'],
+            codigo=jd['codigo'],
+            motor=jd['motor'],
+            chasis=jd['chasis'],
+            status=jd['status'])
+
+            datos = {'message': "Success"}
+        except:
+            datos = {'message': "Error saving bus"}
+
+        return JsonResponse(datos)
+    
+    def put(self, request, id):
+        jd = json.loads(request.body)
+        buses = list(Bus.objects.filter(id=id).values())
+        if len(buses) > 0:
+            bus = Bus.objects.get(id=id)
+
+
+            bus.placa=jd['placa']
+            bus.modelo=jd['modelo']
+            bus.codigo=jd['codigo']
+            bus.motor=jd['motor']
+            bus.chasis=jd['chasis']
+            bus.status = jd['status']
+
+            bus.save()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Bus not found..."}
+        return JsonResponse(datos)
+    
+    def delete(self, request, id):
+        buses = list(Bus.objects.filter(id=id).values())
+        if len(buses) > 0:
+            Bus.objects.filter(id=id).delete()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Bus not found..."}
+        return JsonResponse(datos)
