@@ -1,4 +1,5 @@
 from datetime import datetime
+from pickle import FALSE, TRUE
 from django.db import models
 
 # Create your models here.
@@ -57,27 +58,23 @@ class Trip(models.Model):
     status = models.CharField(max_length=1, default="A")
 
 class Seats(models.Model):
-    trip = models.OneToOneField(
-        Trip,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )
-    seat1 = models.CharField(max_length=50)
-    seat2 = models.CharField(max_length=50)
-    seat3 = models.CharField(max_length=50)
-    seat4 = models.CharField(max_length=50)
-    seat5 = models.CharField(max_length=50)
-    seat6 = models.CharField(max_length=50)
-    seat7 = models.CharField(max_length=50)
-    seat8 = models.CharField(max_length=50)
-    seat9 = models.CharField(max_length=50)
-    seat10 = models.CharField(max_length=50)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=True)
+    bus = models.ForeignKey(Bus, on_delete=models.CASCADE, null=True)
+    seat1 = models.ForeignKey(Passenger, related_name='seat1', on_delete=models.SET_NULL, null=True)
+    seat2 = models.ForeignKey(Passenger,related_name='seat2', on_delete=models.SET_NULL, null=True)
+    seat3 = models.ForeignKey(Passenger,related_name='seat3', on_delete=models.SET_NULL, null=True)
+    seat4 = models.ForeignKey(Passenger,related_name='seat4', on_delete=models.SET_NULL, null=True)
+    seat5 = models.ForeignKey(Passenger,related_name='seat5', on_delete=models.SET_NULL, null=True)
+    seat6 = models.ForeignKey(Passenger,related_name='seat6', on_delete=models.SET_NULL, null=True)
+    seat7 = models.ForeignKey(Passenger,related_name='seat7', on_delete=models.SET_NULL, null=True)
+    seat8 = models.ForeignKey(Passenger,related_name='seat8', on_delete=models.SET_NULL, null=True)
+    seat9 = models.ForeignKey(Passenger,related_name='seat9', on_delete=models.SET_NULL, null=True)
+    seat10 = models.ForeignKey(Passenger,related_name='seat10', on_delete=models.SET_NULL, null=True)
     
 class Book(models.Model):
-    passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE)
-    trip = models.ForeignKey(Trip, on_delete=models.CASCADE)
-    seats = models.OneToOneField(
-        Seats,
-        on_delete=models.CASCADE,
-        primary_key=True,
-    )    
+    passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE, null=True)
+    seats = models.ForeignKey(Seats, on_delete=models.CASCADE, null=True)
+    trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=True)
+    #createAt = models.DateTimeField(auto_now_add=datetime.now())
+    description = models.CharField(max_length=50, null=True)
+  

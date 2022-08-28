@@ -2,7 +2,7 @@ from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from .models import Bus, Driver, Passenger, Trip
+from .models import Bus, Driver, Passenger, Seats, Trip
 import json
 
 # Create your views here.
@@ -94,7 +94,7 @@ class DriverView(View):
 
     def get(self, request, id=0):
         if (id > 0):
-            drivers = list(Driver.objects.filter(id=id).values())
+            drivers = list(Driver.objects.filter(bus_id=id).values())
             if len(drivers) > 0:
                 driver = drivers[0]
                 datos = {'message': "Success", 'company': driver}
@@ -322,4 +322,100 @@ class TripView(View):
             datos = {'message': "Success"}
         else:
             datos = {'message': "Trip not found..."}
+        return JsonResponse(datos)
+
+class SeatsView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, id=0):
+        if (id > 0):
+            seatses = list(Seats.objects.filter(trip_id=id).values())
+            if len(seatses) > 0:
+                seats = seatses[0]
+                datos = {'message': "Success", 'seats': seats}
+            else:
+                datos = {'message': "seats not found..."}
+            return JsonResponse(datos)
+        else:
+            seatses = list(Seats.objects.values())
+            if len(seatses) > 0:
+                datos = {'message': "Success", 'seats': seatses}
+            else:
+                datos = {'message': "seats not found..."}
+            return JsonResponse(datos)
+
+    def post(self, request):
+        # print(request.body)
+        jd = json.loads(request.body)
+        # print(jd)
+        global tripa
+        tripa = Trip()
+        tripas = list(Trip.objects.filter(id=jd['trip_id']).values())
+
+        global busa
+        busa = Bus()
+        buses = list(Bus.objects.filter(id=jd['bus_id']).values())
+
+        if len(tripas) > 0:
+                tripa = Trip.objects.get(id=jd['trip_id'])
+
+        if len(buses) > 0:
+                busa = Bus.objects.get(id=jd['bus_id'])    
+        
+        try:
+            Seats.objects.create(
+            trip= tripa,
+            bus = busa,
+            seat1 = Passenger.objects.get(id=jd['seat1']) if jd['seat1'] != None else  None,
+            seat2 = Passenger.objects.get(id=jd['seat2']) if jd['seat2'] != None else  None,
+            seat3 = Passenger.objects.get(id=jd['seat3']) if jd['seat3'] != None else  None,
+            seat4 = Passenger.objects.get(id=jd['seat4']) if jd['seat4'] != None else  None,
+            seat5 = Passenger.objects.get(id=jd['seat5']) if jd['seat5'] != None else  None,
+            seat6 = Passenger.objects.get(id=jd['seat6']) if jd['seat6'] != None else  None,
+            seat7 = Passenger.objects.get(id=jd['seat7']) if jd['seat7'] != None else  None,
+            seat8 = Passenger.objects.get(id=jd['seat8']) if jd['seat8'] != None else  None,
+            seat9 = Passenger.objects.get(id=jd['seat9']) if jd['seat9'] != None else  None,
+            seat10 = Passenger.objects.get(id=jd['seat10']) if jd['seat10'] != None else  None,
+            )
+
+            datos = {'message': "Success"}
+        except Exception as err:
+            print("ERROR: ",err)
+            datos = {'message': "Error saving seats"}
+
+        return JsonResponse(datos)
+    
+    def put(self, request, id):
+        
+        jd = json.loads(request.body)
+        seatses = list(Seats.objects.filter(id=id).values())
+        if len(seatses) > 0:
+           seats = Seats.objects.get(id=id)
+           seats.seat1 = Passenger.objects.get(id=jd['seat1']) if jd['seat1'] != None else  None
+           seats.seat2 = Passenger.objects.get(id=jd['seat2']) if jd['seat2'] != None else  None
+           seats.seat3 = Passenger.objects.get(id=jd['seat3']) if jd['seat3'] != None else  None
+           seats.seat4 = Passenger.objects.get(id=jd['seat4']) if jd['seat4'] != None else  None
+           seats.seat5 = Passenger.objects.get(id=jd['seat5']) if jd['seat5'] != None else  None
+           seats.seat6 = Passenger.objects.get(id=jd['seat6']) if jd['seat6'] != None else  None
+           seats.seat7 = Passenger.objects.get(id=jd['seat7']) if jd['seat7'] != None else  None
+           seats.seat8 = Passenger.objects.get(id=jd['seat8']) if jd['seat8'] != None else  None
+           seats.seat9 = Passenger.objects.get(id=jd['seat9']) if jd['seat9'] != None else  None
+           seats.seat10 = Passenger.objects.get(id=jd['seat10']) if jd['seat10'] != None else  None
+           
+           seats.save()
+           datos = {'message': "Success"}
+        else:
+            datos = {'message': "Seats not found..."}
+        return JsonResponse(datos)
+    
+    def delete(self, request, id):
+        seatses = list(Seats.objects.filter(id=id).values())
+        if len(seatses) > 0:
+            Seats.objects.filter(id=id).delete()
+            datos = {'message': "Success"}
+        else:
+            datos = {'message': "Seats not found..."}
         return JsonResponse(datos)
