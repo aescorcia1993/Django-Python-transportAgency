@@ -11,8 +11,8 @@ REST API creada con Python, el framework web Django y el SGBD MySQL, con el prot
  
 ## COMANDOS DE INSTALACIÓN
 
-INSTALAR PYTHON3 !!!!!!  el comando depende de si es window o linux
-INSTALAR PIP     !!!!!!  el comando depende de si es window o linux
+- sudo apt-get python3 *** INSTALAR PYTHON3 !!!!!!  el comando depende de si es window o linux
+- sudo apt-get -y install python3-pip *** INSTALAR PIP  !!!!!!  el comando depende de si es window o linux
 
 pip install virtualenv *** INSTALAR LIBRERIA PARA MAQUINAS VIRTUALES
 
@@ -32,14 +32,14 @@ pip install mysqlclient pymysql *** INSTALAR CONECTORES MYSQL
 
 pip install django-cors-headers *** INSTALAR LIBRERIA DE CORS
 
-
-*****COLOCARSE EN LA CARPETA DEL PROYECTO (1) **************************************************
+ 
+#### COLOCARSE EN LA CARPETA DEL PROYECTO (1)
 
 python manage.py makemigrations
 
 python manage.py migrate
 
-*****EJECUTAR SERVIDOR *************************************************************************
+#### EJECUTAR SERVIDOR 
 
 python manage.py runserver *** PARARSE EN LA CONSOLA EN LA CARPETA DEL PROYECTO (1)
 
