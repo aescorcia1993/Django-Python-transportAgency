@@ -34,7 +34,7 @@ django-admin startproject $NombreDelProyecto *** CREAR PROYECTO NUEVO (1) || EST
 
 django-admin startapp $NombreDeApi *** CREAR PRIMERA API || ESTO ES PARA NUEVOS PROJECTOS
  
-#### COLOCARSE EN LA CARPETA DEL PROYECTO  
+#### COLOCARSE EN LA CARPETA DEL PROYECTO   =>  Django-Python-transportAgency/Proyecto_API
 
 python manage.py makemigrations
 
@@ -42,7 +42,7 @@ python manage.py migrate
 
 #### EJECUTAR SERVIDOR    
 
-python manage.py runserver *** PARARSE EN LA CONSOLA DENTRO DE LA CARPETA     Django-Python-transportAgency/Proyecto_API
+python manage.py runserver *** PARARSE EN LA CONSOLA DENTRO DE LA CARPETA  =>   Django-Python-transportAgency/Proyecto_API
 
 ### ENLACES DE SOPORTE PARA CORRER PROJECTO
    - https://www.youtube.com/watch?v=W530YJd3dUU&ab_channel=N1G1CHANNEL
