@@ -23,28 +23,26 @@ virtualenv -p python3 env *** PONER CONSOLA EN CARPETA DEL PROYECTO Y CREAR MAQU
 pip install Django==3.2.4 *** INSTALAR DJANGO
 
 pip list  *** VERIFICA LIBRERIAS INSTALADAS
-
-django-admin startproject $NombreDelProyecto *** CREAR PROYECTO NUEVO (1)
-
-django-admin startapp $NombreDeApi *** CREAR PRIMERA API
  
 pip install mysqlclient pymysql *** INSTALAR CONECTORES MYSQL
 
 pip install django-cors-headers *** INSTALAR LIBRERIA DE CORS
 
+### NUEVOS PROJECTOS
  
-#### COLOCARSE EN LA CARPETA DEL PROYECTO (1)
+django-admin startproject $NombreDelProyecto *** CREAR PROYECTO NUEVO (1) || ESTO ES PARA NUEVOS PROJECTOS
+
+django-admin startapp $NombreDeApi *** CREAR PRIMERA API || ESTO ES PARA NUEVOS PROJECTOS
+ 
+#### COLOCARSE EN LA CARPETA DEL PROYECTO  
 
 python manage.py makemigrations
 
 python manage.py migrate
 
-#### EJECUTAR SERVIDOR 
+#### EJECUTAR SERVIDOR    
 
-python manage.py runserver *** PARARSE EN LA CONSOLA EN LA CARPETA DEL PROYECTO (1)
-
-
-
+python manage.py runserver *** PARARSE EN LA CONSOLA DENTRO DE LA CARPETA     Django-Python-transportAgency/Proyecto_API
 
 ### ENLACES DE SOPORTE PARA CORRER PROJECTO
    - https://www.youtube.com/watch?v=W530YJd3dUU&ab_channel=N1G1CHANNEL
