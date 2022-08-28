@@ -1,6 +1,6 @@
 from datetime import datetime
-from pickle import FALSE, TRUE
 from django.db import models
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 
@@ -75,6 +75,10 @@ class Book(models.Model):
     passenger = models.ForeignKey(Passenger, on_delete=models.CASCADE, null=True)
     seats = models.ForeignKey(Seats, on_delete=models.CASCADE, null=True)
     trip = models.ForeignKey(Trip, on_delete=models.CASCADE, null=True)
-    #createAt = models.DateTimeField(auto_now_add=datetime.now())
     description = models.CharField(max_length=50, null=True)
-  
+    position = models.PositiveIntegerField( null=False, default=1)
+    createAt = models.DateTimeField(auto_now=True)
+
+
+    
+ 
