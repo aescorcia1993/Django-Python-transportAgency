@@ -1,6 +1,10 @@
+import math
 from django.http.response import JsonResponse
 from django.utils.decorators import method_decorator
 from django.views import View
+from django.db.models import F, Sum, Avg
+from django.db import connection
+from django.core import serializers
 from django.views.decorators.csrf import csrf_exempt
 from .models import Book, Bus, Driver, Passenger, Seats, Trip
 import json
@@ -504,7 +508,7 @@ class BookView(View):
             else:
                 print("Position already sold")
                 raise ValueError("Position already sold")
-                
+
             seatsa.save()
 
             Book.objects.create(
@@ -521,29 +525,6 @@ class BookView(View):
 
         return JsonResponse(datos)
     
-    def put(self, request, id):
-        
-        jd = json.loads(request.body)
-        seatses = list(Seats.objects.filter(id=id).values())
-        if len(seatses) > 0:
-           seats = Seats.objects.get(id=id)
-           seats.seat1 = Passenger.objects.get(id=jd['seat1']) if jd['seat1'] != None else  None
-           seats.seat2 = Passenger.objects.get(id=jd['seat2']) if jd['seat2'] != None else  None
-           seats.seat3 = Passenger.objects.get(id=jd['seat3']) if jd['seat3'] != None else  None
-           seats.seat4 = Passenger.objects.get(id=jd['seat4']) if jd['seat4'] != None else  None
-           seats.seat5 = Passenger.objects.get(id=jd['seat5']) if jd['seat5'] != None else  None
-           seats.seat6 = Passenger.objects.get(id=jd['seat6']) if jd['seat6'] != None else  None
-           seats.seat7 = Passenger.objects.get(id=jd['seat7']) if jd['seat7'] != None else  None
-           seats.seat8 = Passenger.objects.get(id=jd['seat8']) if jd['seat8'] != None else  None
-           seats.seat9 = Passenger.objects.get(id=jd['seat9']) if jd['seat9'] != None else  None
-           seats.seat10 = Passenger.objects.get(id=jd['seat10']) if jd['seat10'] != None else  None
-           
-           seats.save()
-           datos = {'message': "Success"}
-        else:
-            datos = {'message': "Seats not found..."}
-        return JsonResponse(datos)
-    
     def delete(self, request, id):
         seatses = list(Seats.objects.filter(id=id).values())
         if len(seatses) > 0:
@@ -552,3 +533,76 @@ class BookView(View):
         else:
             datos = {'message': "Seats not found..."}
         return JsonResponse(datos)
+
+class ReportView(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+ 
+
+    def get(self, request, id=0):
+            sqlQ =   '''SELECT id, trip_id, AVG((CASE WHEN seat1_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat2_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat3_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat4_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat5_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat6_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat7_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat8_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat9_id IS NOT NULL THEN 1 ELSE 0 END) 
+            + (CASE WHEN seat10_id IS NOT NULL THEN 1 ELSE 0 END)) AS sold_tickets FROM api_seats GROUP BY trip_id'''
+
+            global seats
+            with connection.cursor() as cursor:
+             cursor.execute(sqlQ)
+             seats = cursor.fetchall()
+
+            filtrada = [] 
+            for travel in seats:
+                    trips = list(Trip.objects.filter(id=travel[1]).values())
+                    filtrada.append({"id":travel[0],"avgSoldTickets":travel[2],
+                                     "trip": trips[0]})
+
+            datos = {'message': "trips avg", "trip": filtrada}
+            return JsonResponse(datos)
+
+    def post(self, request, capacity):
+        # print(request.body)
+        jd = json.loads(request.body)
+        # print(jd)
+        try:
+            numSoldTickets = math.floor(capacity/10)
+
+            sqlQ =''' SELECT id, trip_id,
+                ((CASE WHEN seat1_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat2_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat3_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat4_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat5_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat6_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat7_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat8_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat9_id IS NOT NULL THEN 1 ELSE 0 END) 
+                + (CASE WHEN seat10_id IS NOT NULL THEN 1 ELSE 0 END)) AS sold_tickets, bus_id  
+                FROM django_apiv1.api_seats'''
+
+            global seats
+            with connection.cursor() as cursor:
+             cursor.execute(sqlQ)
+             seats = cursor.fetchall()
+  
+            filtrada = []
+            
+            for travel in seats:
+                
+                if travel[2]>numSoldTickets:
+                    filtrada.append({"id":travel[0],"trip_id":travel[1],
+                                     "sold_tickets":travel[2],"bus_id":travel[3]})
+
+            datos = {'message': "Success", "report":filtrada}
+        except:
+            datos = {'message': "Error generating report."}
+
+        return JsonResponse(datos)
+    

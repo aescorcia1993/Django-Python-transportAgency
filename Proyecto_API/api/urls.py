@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import BusView, DriverView, PassengerView, SeatsView, TripView, BookView
+from .views import BusView, DriverView, PassengerView, ReportView, SeatsView, TripView, BookView
 
 urlpatterns = [
     path('passengers', PassengerView.as_view(), name='passenger_list'),
@@ -19,4 +19,7 @@ urlpatterns = [
 
     path('books', BookView.as_view(), name='book_list'),
     path('books/<int:id>', BookView.as_view(), name='book_process'),
+
+    path('tripsByAvg', ReportView.as_view(), name='report1'),
+    path('busBySoldTickets/<int:capacity>', ReportView.as_view(), name='report2'),
 ]
