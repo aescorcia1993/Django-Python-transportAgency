@@ -2,6 +2,15 @@
 
 REST API creada con Python, el framework web Django y el SGBD MySQL, con el protocolo HTTP y los método GET, POST, PUT y DELETE.
 
+## API PUBLICA EN POSTMAN
+ Documentanción de la API Online
+ - https://documenter.getpostman.com/view/7076069/VUxKTUh7
+## MAQUINA DE AWS FUNCIONANDO CON LA API CORRIENDO
+ - http://54.209.153.172:8080
+ - http://54.209.153.172:8080/api/drivers (Prueba esta dirección en tu navegador)
+ 
+## COMANDOS DE INSTALACIÓN
+
 INSTALAR PYTHON3 !!!!!!  el comando depende de si es window o linux
 INSTALAR PIP     !!!!!!  el comando depende de si es window o linux
 
