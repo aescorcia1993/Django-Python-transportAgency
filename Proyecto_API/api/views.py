@@ -22,7 +22,7 @@ class PassengerView(View):
             passengers = list(Passenger.objects.filter(id=id).values())
             if len(passengers) > 0:
                 passenger = passengers[0]
-                datos = {'message': "Success", 'company': passenger}
+                datos = {'message': "Success", 'passengers': passenger}
             else:
                 datos = {'message': "passengers not found..."}
             return JsonResponse(datos)
