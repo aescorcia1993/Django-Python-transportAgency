@@ -5,9 +5,6 @@ REST API creada con Python, el framework web Django y el SGBD MySQL, con el prot
 ## API PUBLICA EN POSTMAN
  Documentanción de la API Online
  - https://documenter.getpostman.com/view/7076069/VUxKTUh7
-## MAQUINA DE AWS FUNCIONANDO CON LA API CORRIENDO
- - http://54.209.153.172:8080
- - http://54.209.153.172:8080/api/drivers (Prueba esta dirección en tu navegador)
  
 ## COMANDOS DE INSTALACIÓN
 
